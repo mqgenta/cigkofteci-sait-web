@@ -1,0 +1,203 @@
+<%- include('partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in-hero">
+      <div>
+        <h1 class="section-title">Şube Yönetim Paneli</h1>
+        <p class="section-sub">Menü ürünlerini (Ekle/Güncelle/Sil) ve toplu sipariş taleplerini buradan yönetebilirsiniz.</p>
+      </div>
+      <form action="/admin/logout" method="POST">
+        <button type="submit" class="btn btn-outline btn-sm">Çıkış Yap</button>
+      </form>
+    </div>
+
+    <div class="kpi-grid fade-in-hero">
+      <div class="kpi-card">
+        <span class="kpi-value"><%= products.length %></span>
+        <span class="kpi-label">Toplam Menü Ürünü</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-value"><%= products.filter(p => p.is_available).length %></span>
+        <span class="kpi-label">Satışta Olan Ürün</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-value"><%= orders.filter(o => o.status === 'Beklemede').length %></span>
+        <span class="kpi-label">Bekleyen Toplu Sipariş</span>
+      </div>
+    </div>
+
+    <% if (statusMessage) { %>
+      <div class="alert alert-success"><%= statusMessage %></div>
+    <% } %>
+    <% if (errorMessage) { %>
+      <div class="alert alert-error"><%= errorMessage %></div>
+    <% } %>
+
+    <div class="admin-grid">
+      <div class="card">
+        <h2 style="margin: 0 0 14px 0; font-size: 1.15rem; color: var(--dark);">
+          <%= editProduct ? 'Ürünü Güncelle: ' + editProduct.name : 'Yeni Menü Ürünü Ekle' %>
+        </h2>
+        <form
+          action="<%= editProduct ? '/admin/products/' + editProduct.id + '/update' : '/admin/products' %>"
+          method="POST"
+        >
+          <div class="form-group">
+            <label for="name">Ürün Adı *</label>
+            <input type="text" id="name" name="name" value="<%= editProduct ? editProduct.name : '' %>" required>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Kategori *</label>
+            <select id="category" name="category" required>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat %>" <%= editProduct && editProduct.category === cat ? 'selected' : '' %>><%= cat %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="price">Fiyat (TL) *</label>
+            <input type="number" step="0.5" min="1" id="price" name="price" value="<%= editProduct ? editProduct.price : '' %>" required>
+          </div>
+
+          <div class="form-group">
+            <label for="portion_info">Gramaj / Porsiyon Bilgisi</label>
+            <input type="text" id="portion_info" name="portion_info" value="<%= editProduct ? editProduct.portion_info : '' %>" placeholder="Örn: 125 gr, 500 gr, 300 ml">
+          </div>
+
+          <div class="form-group">
+            <label for="image_url">Ürün Görseli</label>
+            <select id="image_url" name="image_url">
+              <option value="">Kategoriye göre otomatik seç</option>
+              <option value="/images/durum.jpg" <%= editProduct && editProduct.image_url === '/images/durum.jpg' ? 'selected' : '' %>>Çiğ Köfte Dürüm</option>
+              <option value="/images/doritos_durum.jpg" <%= editProduct && editProduct.image_url === '/images/doritos_durum.jpg' ? 'selected' : '' %>>Doritoslu Çiğ Köfte Dürüm</option>
+              <option value="/images/porsiyon.jpg" <%= editProduct && editProduct.image_url === '/images/porsiyon.jpg' ? 'selected' : '' %>>Çiğ Köfte Porsiyon / Kilo</option>
+              <option value="/images/pilav.jpg" <%= editProduct && editProduct.image_url === '/images/pilav.jpg' ? 'selected' : '' %>>Pilav</option>
+              <option value="/images/tatli_donut.jpg" <%= editProduct && editProduct.image_url === '/images/tatli_donut.jpg' ? 'selected' : '' %>>Tatlı &amp; Donut</option>
+              <option value="/images/ayran_salgam.jpg" <%= editProduct && editProduct.image_url === '/images/ayran_salgam.jpg' ? 'selected' : '' %>>İçecek (Ayran, Şalgam, Soda)</option>
+              <option value="/images/tursu_sos.jpg" <%= editProduct && editProduct.image_url === '/images/tursu_sos.jpg' ? 'selected' : '' %>>Turşu, Sos &amp; Lavaş</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Açıklama</label>
+            <textarea id="description" name="description" rows="2"><%= editProduct ? editProduct.description : '' %></textarea>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="is_featured" name="is_featured" <%= editProduct && editProduct.is_featured ? 'checked' : '' %>>
+            <label for="is_featured" style="margin:0;">Ana sayfada (En Sevilenler) öne çıkar</label>
+          </div>
+
+          <% if (editProduct) { %>
+            <div class="checkbox-row">
+              <input type="checkbox" id="is_available" name="is_available" <%= editProduct.is_available ? 'checked' : '' %>>
+              <label for="is_available" style="margin:0;">Menüde satışta (aktif)</label>
+            </div>
+          <% } %>
+
+          <div style="display:flex; gap:8px;">
+            <button type="submit" class="btn btn-primary" style="flex:1;">
+              <%= editProduct ? 'Değişiklikleri Kaydet' : 'Ürünü Ekle' %>
+            </button>
+            <% if (editProduct) { %>
+              <a href="/admin" class="btn btn-outline">İptal</a>
+            <% } %>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <h2 style="margin: 0 0 12px 0; font-size: 1.15rem; color: var(--dark);">Mevcut Menü (<%= products.length %> Ürün)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Ürün</th>
+                <th>Kategori</th>
+                <th>Fiyat</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(item => { %>
+                <tr>
+                  <td>
+                    <strong><%= item.name %></strong>
+                    <% if (item.portion_info) { %><br><small style="color:var(--muted);"><%= item.portion_info %></small><% } %>
+                  </td>
+                  <td><%= item.category %></td>
+                  <td><strong><%= item.price %> TL</strong></td>
+                  <td><%= item.is_available ? 'Satışta' : 'Pasif' %></td>
+                  <td>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                      <a href="/admin?edit=<%= item.id %>" class="btn btn-outline btn-sm">Düzenle</a>
+                      <form action="/admin/products/<%= item.id %>/delete" method="POST" onsubmit="return confirm('Bu ürünü silmek istediğinize emin misiniz?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin: 12px 0 12px 0; font-size: 1.15rem; color: var(--dark);">Gelen Toplu Sipariş &amp; İletişim Talepleri (<%= orders.length %>)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Müşteri</th>
+            <th>Telefon</th>
+            <th>Talep &amp; Miktar</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>İşlem</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (orders.length === 0) { %>
+            <tr>
+              <td colspan="6" style="text-align:center; color:var(--muted);">Henüz gelen bir toplu sipariş talebi bulunmuyor.</td>
+            </tr>
+          <% } else { %>
+            <% orders.forEach(ord => { %>
+              <tr>
+                <td>
+                  <strong><%= ord.customer_name %></strong>
+                  <% if (ord.message) { %><br><small style="color:var(--muted);"><%= ord.message %></small><% } %>
+                </td>
+                <td><a href="tel:<%= ord.phone %>"><%= ord.phone %></a></td>
+                <td><strong><%= ord.order_type %></strong><br><small><%= ord.quantity_note %></small></td>
+                <td><%= ord.delivery_date %></td>
+                <td>
+                  <form action="/admin/orders/<%= ord.id %>/status" method="POST" style="display:flex; gap:6px;">
+                    <select name="status" style="padding:5px 8px; border-radius:6px; border:1px solid var(--border);">
+                      <% ['Beklemede', 'Hazırlanıyor', 'Tamamlandı', 'İptal'].forEach(st => { %>
+                        <option value="<%= st %>" <%= ord.status === st ? 'selected' : '' %>><%= st %></option>
+                      <% }) %>
+                    </select>
+                    <button type="submit" class="btn btn-outline btn-sm">Kaydet</button>
+                  </form>
+                </td>
+                <td>
+                  <form action="/admin/orders/<%= ord.id %>/delete" method="POST" onsubmit="return confirm('Bu talebi silmek istiyor musunuz?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,120 @@
+<%- include('partials/header') %>
+
+<section class="section">
+  <div class="container">
+    <div class="form-card fade-in-hero">
+      <h1 class="section-title" style="margin-bottom: 8px;">Özel Gün &amp; Toplu Tepsi Siparişi</h1>
+      <p class="section-sub" style="margin-bottom: 18px;">
+        Doğum günü, toplantı, okul veya davetleriniz için kiloluk / tepsi çiğ köfte talebinizi iletin.
+      </p>
+
+      <div class="steps-bar">
+        <div class="step-pill"><strong>1. Adım</strong>Bilgilerinizi ve miktarı girin</div>
+        <div class="step-pill"><strong>2. Adım</strong>Talebiniz şube sistemine kaydedilir</div>
+        <div class="step-pill"><strong>3. Adım</strong>Tek tıkla WhatsApp'tan onaylayın</div>
+      </div>
+
+      <% if (successOrder) { %>
+        <div class="alert alert-success">
+          <p style="margin:0 0 10px 0;">
+            Teşekkürler <strong><%= successOrder.customer_name %></strong>! <%= successOrder.delivery_date %> tarihli
+            <strong><%= successOrder.order_type %></strong> (<%= successOrder.quantity_note %>) talebiniz şube sistemimize kaydedildi.
+          </p>
+          <a href="<%= successOrder.whatsappUrl %>" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">
+            WhatsApp Üzerinden Hızlıca Onayla
+          </a>
+        </div>
+      <% } %>
+
+      <form id="orderForm" action="/siparis" method="POST" novalidate>
+        <div class="form-group">
+          <label for="customer_name">Adınız Soyadınız *</label>
+          <input
+            type="text"
+            id="customer_name"
+            name="customer_name"
+            value="<%= formData.customer_name || '' %>"
+            placeholder="Örn: Ahmet Yılmaz"
+            required
+          >
+          <% if (errors.customer_name) { %>
+            <div class="field-error"><%= errors.customer_name %></div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Cep Telefonu *</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value="<%= formData.phone || '' %>"
+            placeholder="05XX XXX XX XX"
+            required
+          >
+          <% if (errors.phone) { %>
+            <div class="field-error"><%= errors.phone %></div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="order_type">Talep Türü *</label>
+          <select id="order_type" name="order_type" required>
+            <option value="">Seçiniz...</option>
+            <option value="Toplu Tepsi Siparişi" <%= formData.order_type === 'Toplu Tepsi Siparişi' ? 'selected' : '' %>>Toplu Tepsi Siparişi</option>
+            <option value="Özel Gün / Davet Paketi" <%= formData.order_type === 'Özel Gün / Davet Paketi' ? 'selected' : '' %>>Özel Gün / Davet Paketi</option>
+            <option value="Kurumsal Toplantı Siparişi" <%= formData.order_type === 'Kurumsal Toplantı Siparişi' ? 'selected' : '' %>>Kurumsal Toplantı Siparişi</option>
+            <option value="Genel İletişim / Görüş" <%= formData.order_type === 'Genel İletişim / Görüş' ? 'selected' : '' %>>Genel İletişim / Görüş</option>
+          </select>
+          <% if (errors.order_type) { %>
+            <div class="field-error"><%= errors.order_type %></div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="quantity_note">Tahmini Miktar / Ürün Tercihi *</label>
+          <input
+            type="text"
+            id="quantity_note"
+            name="quantity_note"
+            value="<%= formData.quantity_note || '' %>"
+            placeholder="Örn: 3 Kg Çiğ Köfte + 30 Lavaş + 2 L Ayran"
+            required
+          >
+          <% if (errors.quantity_note) { %>
+            <div class="field-error"><%= errors.quantity_note %></div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="delivery_date">Teslim / Etkinlik Tarihi *</label>
+          <input
+            type="date"
+            id="delivery_date"
+            name="delivery_date"
+            min="<%= new Date().toISOString().split('T')[0] %>"
+            value="<%= formData.delivery_date || '' %>"
+            required
+          >
+          <% if (errors.delivery_date) { %>
+            <div class="field-error"><%= errors.delivery_date %></div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Ek Notunuz (İsteğe Bağlı)</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="3"
+            placeholder="Teslimat saati, acı tercihi veya özel notunuzu yazabilirsiniz..."
+          ><%= formData.message || '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">Talebi Gönder</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

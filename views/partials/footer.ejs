@@ -1,0 +1,35 @@
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4><%= shop.brand %> — <%= shop.branch %></h4>
+        <p><%= shop.address %></p>
+        <p>Telefon: <a href="tel:+<%= shop.phoneRaw %>"><%= shop.phoneDisplay %></a></p>
+        <a href="<%= shop.links.googleMaps %>" target="_blank" rel="noopener" style="color:#FBBF24; font-weight:700; margin-top:6px;">Google Haritalar'da Yol Tarifi →</a>
+      </div>
+      <div>
+        <h4>Çalışma Saatleri</h4>
+        <p>Pazartesi – Pazar: <%= shop.hoursWeekday %></p>
+        <p>Cuma: <%= shop.hoursFriday %></p>
+      </div>
+      <div>
+        <h4>Ödeme Yöntemleri</h4>
+        <p><%= shop.paymentMethods.join(' • ') %></p>
+      </div>
+      <div>
+        <h4>Hızlı Sipariş Kanalları</h4>
+        <a href="<%= shop.links.whatsapp %>" target="_blank" rel="noopener">WhatsApp Paket Servis</a>
+        <a href="<%= shop.links.trendyol %>" target="_blank" rel="noopener">Trendyol Yemek</a>
+        <a href="<%= shop.links.yemeksepeti %>" target="_blank" rel="noopener">Yemeksepeti</a>
+        <a href="<%= shop.links.migros %>" target="_blank" rel="noopener">Migros Yemek</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="mobile-sticky-bar">
+    <a href="<%= shop.links.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">WhatsApp Sipariş</a>
+    <a href="<%= shop.links.googleMaps %>" target="_blank" rel="noopener" class="btn btn-yellow btn-sm">Yol Tarifi</a>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

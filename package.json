@@ -1,0 +1,20 @@
+{
+  "name": "cigkofteci-sait-umraniye",
+  "version": "1.0.0",
+  "description": "Çiğköfteci Sait Ümraniye Şehzade Caddesi Şubesi dinamik web sitesi ve yönetim paneli (BİLP2135)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-session": "^1.18.1",
+    "sql.js": "^1.12.0"
+  }
+}

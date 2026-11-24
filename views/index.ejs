@@ -1,0 +1,104 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="container hero-grid fade-in-hero">
+    <div>
+      <span class="hero-badge">Ümraniye • İstiklal Mah. Şehzade Cd.</span>
+      <h1><span>Çiğköfteci Sait</span> Lezzeti Kapınızda</h1>
+      <p>
+        Günlük taze yoğrulmuş çiğ köfte, çıtır Doritoslu dürümler, tavuklu pilav ve Bisküvili Tatlı çeşitlerimizle ister mağazamızda ister anında paket servisle hizmetinizdeyiz.
+      </p>
+      <div class="hero-actions">
+        <a href="<%= shop.links.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp">WhatsApp Sipariş</a>
+        <a href="<%= shop.links.trendyol %>" target="_blank" rel="noopener" class="btn btn-trendyol">Trendyol Yemek</a>
+        <a href="/menu" class="btn btn-yellow">Tüm Menü</a>
+        <a href="/siparis" class="btn btn-outline">Toplu Tepsi Siparişi</a>
+      </div>
+    </div>
+    <div class="hero-info-card">
+      <h3>Şube Bilgileri</h3>
+      <div class="info-line"><strong>Adres:</strong> <%= shop.address %></div>
+      <div class="info-line"><strong>Telefon:</strong> <a href="tel:+<%= shop.phoneRaw %>" style="text-decoration:underline; color:#92400E; font-weight:700;"><%= shop.phoneDisplay %></a></div>
+      <div class="info-line"><strong>Hafta İçi &amp; Hafta Sonu:</strong> <%= shop.hoursWeekday %></div>
+      <div class="info-line"><strong>Cuma:</strong> <%= shop.hoursFriday %></div>
+      <div style="margin-top:12px;">
+        <a href="<%= shop.links.googleMaps %>" target="_blank" rel="noopener" class="btn btn-yellow btn-sm" style="width:100%;">
+          Google Haritalar'da Yol Tarifi Al
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container store-layout">
+    <div>
+      <div class="section-header reveal">
+        <div>
+          <h2 class="section-title">Bu Restoranın En Sevilenleri</h2>
+          <p class="section-sub">Trendyol Yemek ve şube müşterilerimizin favori ürünleri.</p>
+        </div>
+        <a href="/menu" class="btn btn-yellow btn-sm">Tüm Menüyü Gör (<%= allProducts.length %> Ürün) →</a>
+      </div>
+
+      <div class="product-list-grid">
+        <% featured.forEach(item => { %>
+          <article class="tgo-card reveal">
+            <div class="tgo-card-body">
+              <div>
+                <div class="product-meta">
+                  <span class="category-tag"><%= item.category %></span>
+                  <% if (item.like_badge) { %>
+                    <span class="like-tag"><%= item.like_badge %></span>
+                  <% } %>
+                </div>
+                <h3><%= item.name %></h3>
+                <p class="product-desc"><%= item.description %></p>
+              </div>
+              <div class="product-footer">
+                <span class="price"><%= item.price %> TL</span>
+                <a
+                  href="https://wa.me/<%= shop.phoneRaw %>?text=<%= encodeURIComponent('Merhaba, ' + item.name + ' (' + item.price + ' TL) sipariş etmek istiyorum.') %>"
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-whatsapp btn-sm"
+                >Sipariş Ver</a>
+              </div>
+            </div>
+            <div class="tgo-card-thumb">
+              <img src="<%= item.image_url || '/images/durum.jpg' %>" alt="<%= item.name %>" loading="lazy" onerror="this.onerror=null;this.src='/images/porsiyon.jpg';">
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+
+    <%- include('partials/sidebar') %>
+  </div>
+</section>
+
+<section class="map-section reveal">
+  <div class="container">
+    <div class="map-card">
+      <div class="map-info">
+        <span class="hero-badge" style="align-self:flex-start; margin-bottom:0;">Konum &amp; Yol Tarifi</span>
+        <h2 class="section-title" style="font-size:1.35rem;">Şubemizi Ziyaret Edin</h2>
+        <p style="margin:0; color:var(--muted); font-size:0.94rem;"><%= shop.address %></p>
+        <p style="margin:0; font-size:0.92rem;"><strong>Çalışma Saatleri:</strong> <%= shop.hoursWeekday %> (Cuma <%= shop.hoursFriday %>)</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;">
+          <a href="<%= shop.links.googleMaps %>" target="_blank" rel="noopener" class="btn btn-yellow btn-sm">Google Maps'te Aç</a>
+          <a href="tel:+<%= shop.phoneRaw %>" class="btn btn-outline btn-sm">Şubeyi Ara</a>
+        </div>
+      </div>
+      <iframe
+        class="map-frame"
+        title="Çiğköfteci Sait Ümraniye Şehzade Caddesi Konumu"
+        src="<%= shop.links.googleMapsEmbed %>"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

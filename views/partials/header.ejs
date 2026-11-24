@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> | <%= shop.brand %> Ümraniye Şehzade Cd.</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="/" class="brand">
+        <span class="brand-badge">SAİT</span>
+        <span class="brand-text">
+          <span class="brand-name"><%= shop.brand %></span>
+          <span class="brand-sub"><%= shop.branch %></span>
+        </span>
+      </a>
+      <button type="button" id="navToggle" class="nav-toggle" aria-label="Menüyü Aç">☰</button>
+      <nav id="navLinks" class="nav-links" aria-label="Ana Menü">
+        <div class="nav-main-links">
+          <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Ana Sayfa</a>
+          <a href="/menu" class="<%= currentPath === '/menu' ? 'active' : '' %>">Menü</a>
+          <a href="/siparis" class="<%= currentPath === '/siparis' ? 'active' : '' %>">Toplu Sipariş</a>
+          <% if (isAdmin) { %>
+            <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Yönetim</a>
+          <% } else { %>
+            <a href="/admin/login" class="<%= currentPath === '/admin/login' ? 'active' : '' %>">Yönetici</a>
+          <% } %>
+        </div>
+        <div class="nav-order-actions">
+          <a href="<%= shop.links.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">WhatsApp</a>
+          <a href="<%= shop.links.trendyol %>" target="_blank" rel="noopener" class="btn btn-trendyol btn-sm">Trendyol</a>
+          <a href="<%= shop.links.yemeksepeti %>" target="_blank" rel="noopener" class="btn btn-yemeksepeti btn-sm">Yemeksepeti</a>
+        </div>
+      </nav>
+    </div>
+  </header>

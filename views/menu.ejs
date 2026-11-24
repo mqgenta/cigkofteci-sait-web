@@ -1,0 +1,73 @@
+<%- include('partials/header') %>
+
+<section class="section">
+  <div class="container store-layout">
+    <div>
+      <div class="section-header fade-in-hero">
+        <div>
+          <h1 class="section-title">Şube Menüsü</h1>
+          <p class="section-sub">Güncel fiyatlar, ürün görselleri ve değerlendirme oranları.</p>
+        </div>
+        <a href="/siparis" class="btn btn-yellow btn-sm">Toplu / Tepsi Siparişi</a>
+      </div>
+
+      <div class="filter-bar fade-in-hero">
+        <div class="filter-pills">
+          <a href="/menu" class="pill <%= selectedCategory === 'Tümü' ? 'active' : '' %>">Tümü</a>
+          <% categories.forEach(cat => { %>
+            <a href="/menu?kategori=<%= encodeURIComponent(cat) %>" class="pill <%= selectedCategory === cat ? 'active' : '' %>"><%= cat %></a>
+          <% }) %>
+        </div>
+        <form action="/menu" method="GET" class="search-form">
+          <% if (selectedCategory && selectedCategory !== 'Tümü') { %>
+            <input type="hidden" name="kategori" value="<%= selectedCategory %>">
+          <% } %>
+          <input type="text" name="q" value="<%= searchQuery %>" placeholder="Menüde ara (ör. Doritos, Pilav, 1 Kg)...">
+          <button type="submit" class="btn btn-primary btn-sm">Ara</button>
+        </form>
+      </div>
+
+      <% if (products.length === 0) { %>
+        <div class="card" style="text-align:center; padding: 36px;">
+          <p style="margin-bottom: 14px;">Aradığınız kriterlere uygun ürün bulunamadı.</p>
+          <a href="/menu" class="btn btn-outline btn-sm">Tüm Menüyü Göster</a>
+        </div>
+      <% } else { %>
+        <div class="product-list-grid">
+          <% products.forEach(item => { %>
+            <article class="tgo-card reveal">
+              <div class="tgo-card-body">
+                <div>
+                  <div class="product-meta">
+                    <span class="category-tag"><%= item.category %></span>
+                    <% if (item.like_badge) { %>
+                      <span class="like-tag"><%= item.like_badge %></span>
+                    <% } %>
+                  </div>
+                  <h3><%= item.name %></h3>
+                  <p class="product-desc"><%= item.description %></p>
+                </div>
+                <div class="product-footer">
+                  <span class="price"><%= item.price %> TL</span>
+                  <a
+                    href="https://wa.me/<%= shop.phoneRaw %>?text=<%= encodeURIComponent('Merhaba, ' + item.name + ' (' + item.price + ' TL) sipariş etmek istiyorum.') %>"
+                    target="_blank"
+                    rel="noopener"
+                    class="btn btn-whatsapp btn-sm"
+                  >Sipariş Ver</a>
+                </div>
+              </div>
+              <div class="tgo-card-thumb">
+                <img src="<%= item.image_url || '/images/durum.jpg' %>" alt="<%= item.name %>" loading="lazy" onerror="this.onerror=null;this.src='/images/porsiyon.jpg';">
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <%- include('partials/sidebar') %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

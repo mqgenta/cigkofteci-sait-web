@@ -1,0 +1,53 @@
+<aside class="sidebar-stack">
+  <div class="sidebar-card reveal">
+    <h3>Trendyol Yemek Değerlendirmelerimiz</h3>
+    <div class="stats-summary-box">
+      <div>
+        <span class="stat-num"><%= trendyolStats.totalRatings %></span>
+        <span class="stat-label">Değerlendirme</span>
+      </div>
+      <div style="border-left: 1px solid var(--border-warm);"></div>
+      <div>
+        <span class="stat-num"><%= trendyolStats.totalComments %></span>
+        <span class="stat-label">Müşteri Yorumu</span>
+      </div>
+    </div>
+    <% trendyolReviews.forEach(rev => { %>
+      <div class="review-row">
+        <div class="review-top">
+          <span><%= rev.name %></span>
+          <span class="review-rate">%<%= rev.rate %></span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: <%= rev.rate %>%;"></div>
+        </div>
+      </div>
+    <% }) %>
+    <a href="<%= shop.links.trendyol %>" target="_blank" rel="noopener" class="btn btn-trendyol btn-sm" style="width:100%; margin-top:10px;">
+      Trendyol Yemek'te İncele
+    </a>
+  </div>
+
+  <div class="sidebar-card reveal">
+    <h3>Ödeme Yöntemleri</h3>
+    <p style="font-size:0.84rem; color:var(--muted); margin:0 0 6px 0;">
+      Şubemizde ve kapıda teslimatta geçerli ödeme seçenekleri:
+    </p>
+    <div class="payment-pills">
+      <% shop.paymentMethods.forEach(pm => { %>
+        <span class="pay-pill"><%= pm %></span>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="sidebar-card reveal">
+    <h3>Hızlı Sipariş &amp; Konum</h3>
+    <div class="channel-btn-list">
+      <a href="<%= shop.links.whatsapp %>" target="_blank" rel="noopener" class="btn btn-whatsapp btn-sm">WhatsApp ile Sipariş Ver</a>
+      <a href="<%= shop.links.trendyol %>" target="_blank" rel="noopener" class="btn btn-trendyol btn-sm">Trendyol Yemek</a>
+      <a href="<%= shop.links.yemeksepeti %>" target="_blank" rel="noopener" class="btn btn-yemeksepeti btn-sm">Yemeksepeti</a>
+      <a href="<%= shop.links.migros %>" target="_blank" rel="noopener" class="btn btn-migros btn-sm">Migros Yemek</a>
+      <a href="<%= shop.links.googleMaps %>" target="_blank" rel="noopener" class="btn btn-yellow btn-sm">Google Haritalar (Yol Tarifi)</a>
+    </div>
+  </div>
+</aside>
